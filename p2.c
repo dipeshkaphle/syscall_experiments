@@ -13,6 +13,11 @@ int main(int argc, char **argv) {
   int efd1 = atoi(argv[1]);
   int efd2 = atoi(argv[2]);
 
+  char str[501];
+  for (int i = 0; i < 500; i++)
+    str[i] = 'a';
+  str[500] = 0;
+
   int epoll_fd = epoll_create1(0);
 
   ev.events = EPOLLIN | EPOLLHUP;
@@ -41,9 +46,9 @@ int main(int argc, char **argv) {
       exit(1);
     }
     /* eventfd_read(efd1, &val); */
-    char buf[100];
-    read(0, buf, 10);
-    write(1, "ab", 2);
+    char buf[501];
+    read(0, buf, 500);
+    write(1, str, 500);
     eventfd_write(efd2, 1);
   }
   write(2, "P2\n", 3);

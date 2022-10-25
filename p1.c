@@ -10,6 +10,11 @@ struct epoll_event ev, events[MAX_EVENTS];
 int listen_sock, conn_sock, nfds, epollfd;
 
 int main(int argc, char **argv) {
+  char str[501];
+  for (int i = 0; i < 500; i++)
+    str[i] = 'a';
+  str[500] = 0;
+
   char numbuf[10];
   int efd1 = atoi(argv[1]);
   int efd2 = atoi(argv[2]);
@@ -25,7 +30,7 @@ int main(int argc, char **argv) {
   for (int i = 0; i < 100000; i++) {
     sprintf(numbuf, "%d", i);
     // write(2, numbuf,strlen(numbuf));
-    write(1, "ab", 2);
+    write(1, str, 500);
     eventfd_write(efd1, 1);
     eventfd_t val = 0;
 
@@ -42,8 +47,8 @@ int main(int argc, char **argv) {
       write(2, "P1 has died", strlen("P1 has died"));
       exit(1);
     }
-    char buf[100];
-    read(0, buf, 10);
+    char buf[501] = {0};
+    read(0, buf, 500);
   }
   write(2, "P1\n", 3);
 }
