@@ -29,7 +29,9 @@ def setlimits():
 def main(prog1:str, prog2:str):
 
     p1 = subprocess.Popen([ prog1, str(efd1), str(efd2)], stdin=r1, stdout =w2, preexec_fn=setlimits, close_fds=False)
-    p2 = subprocess.Popen([prog2, str(efd1), str(efd2)], stdin=r2, stdout =w1, preexec_fn=setlimits, close_fds=False)
+    p2 = subprocess.Popen([ prog2, str(efd1), str(efd2)], stdin=r2, stdout =w1, preexec_fn=setlimits, close_fds=False)
+    #  p1 = subprocess.Popen(["/usr/bin/time", prog1, str(efd1), str(efd2)], stdin=r1, stdout =w2, preexec_fn=setlimits, stderr=open("p1_out","w"), close_fds=False)
+    #  p2 = subprocess.Popen(["/usr/bin/time", prog2, str(efd1), str(efd2)], stdin=r2, stdout =w1, preexec_fn=setlimits, stderr=open("p2_out","w"), close_fds=False)
 
 
     fds = {os.pidfd_open(p1.pid) : p1 , os.pidfd_open(p2.pid) : p2}
@@ -50,8 +52,8 @@ def main(prog1:str, prog2:str):
                     for k,v in fds.items():
                         v.kill()
                         epoll.unregister(k)
-                    open("output").write("KILLED\n" )
-                    #  os.write(2,b"KILLED")
+                    #  open("output","w+").write("KILLED\n" )
+                    os.write(2,b"KILLED")
                     fds = {}
                     status = 1
                     break
@@ -64,4 +66,4 @@ def main(prog1:str, prog2:str):
     exit(status)
 
 if __name__=='__main__':
-    main("./p1.py","./p2.py")
+    main("./p1","./p2")

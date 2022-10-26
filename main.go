@@ -11,8 +11,8 @@ func main() {
 	var wg sync.WaitGroup
 	var mt sync.Mutex
 	counter := 0
-	C := 500
-	n := 1000
+	C := 100
+	n := 200
 	exec_chan := make(chan int, C)
 	for j := 0; j < C; j++ {
 		wg.Add(1)
